@@ -27,7 +27,7 @@
 
       <div class="mb-3">
         <label class="form-label">Harga</label>
-        <input type="text" name="harga" value="{{ old('harga', $product->harga) }}" class="form-control" />
+        <input type="number" name="harga" value="{{ old('harga', $product->harga) }}" class="form-control" />
       </div>
 
       <div class="mb-3">
@@ -42,12 +42,13 @@
 
       <div class="mb-3">
         <label class="form-label">Foto (opsional)</label>
-        @if($product->foto)
+        @if($product->foto && \Illuminate\Support\Facades\Storage::disk('public')->exists($product->foto))
           <div class="mb-2">
-            <img src="{{ asset('storage/'.$product->foto) }}" alt="" width="120">
+            <img src="{{ Storage::disk('public')->url($product->foto) }}" alt="" width="120">
           </div>
         @endif
         <input type="file" name="foto" class="form-control" />
+        @error('foto') <div class="text-danger">{{ $message }}</div> @enderror
       </div>
 
       <button class="btn btn-primary">Update</button>

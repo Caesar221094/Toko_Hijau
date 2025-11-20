@@ -9,6 +9,7 @@ class Product extends Model
 {
     use HasFactory;
 
+    // tambahkan semua field yang digunakan
     protected $fillable = [
         'nama',
         'category_id',
@@ -18,9 +19,8 @@ class Product extends Model
         'foto',
     ];
 
-    // relasi ke Category
     public function category()
     {
-        return $this->belongsTo(Category::class, 'category_id');
+        return $this->belongsTo(Category::class);
     }
 }

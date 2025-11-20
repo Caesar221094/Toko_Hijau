@@ -27,44 +27,45 @@
         <thead>
           <tr>
             <th style="width:40px">#</th>
-            <th>Foto</th>
+            <th style="width:90px">Foto</th>
             <th>Nama Produk</th>
             <th>Kategori</th>
             <th>Harga</th>
-            <th>Aksi</th>
+            <th style="width:160px">Aksi</th>
           </tr>
         </thead>
         <tbody>
           @forelse($products as $p)
           <tr>
-            {{-- index: jika paginated gunakan perPage() --}}
             <td>{{ $loop->iteration + (method_exists($products,'currentPage') ? ($products->currentPage()-1) * $products->perPage() : 0) }}</td>
 
-            {{-- Foto (thumbnail) --}}
-            <td style="vertical-align:middle; width:100px;">
-              @if(!empty($p->foto))
-                {{-- gunakan Storage::url jika file disimpan di storage/app/public --}}
-                <img src="{{ Storage::url($p->foto) }}" alt="{{ $p->nama }}" style="height:56px; width:56px; object-fit:cover; border-radius:6px; border:1px solid #e6e6e6;">
+            <td style="vertical-align:middle;">
+              @if(!empty($p->foto) && Storage::disk('public')->exists($p->foto))
+                <img src="{{ Storage::disk('public')->url($p->foto) }}" alt="{{ $p->nama }}" style="height:56px; width:56px; object-fit:cover; border-radius:6px; border:1px solid #e6e6e6;">
               @else
-                {{-- placeholder kecil --}}
                 <img src="{{ asset('assets/img/placeholder-56.png') }}" alt="no-photo" style="height:56px; width:56px; object-fit:cover; border-radius:6px; border:1px solid #e6e6e6;">
               @endif
             </td>
 
             <td>
-              {{ $p->nama }}
+              <strong>{{ $p->nama }}</strong>
               @if($p->deskripsi)
                 <div class="text-muted small">{{ Str::limit($p->deskripsi, 80) }}</div>
               @endif
+              @if(isset($p->stok))
+                <div class="text-muted small">Stok: {{ $p->stok }}</div>
+              @endif
             </td>
+
             <td>{{ $p->category?->nama }}</td>
             <td>{{ $p->harga ? number_format($p->harga,2,',','.') : '-' }}</td>
             <td>
               <a href="{{ route('products.edit', $p->id) }}" class="btn btn-sm btn-warning">Edit</a>
-              <form action="{{ route('products.destroy', $p->id) }}" method="POST" style="display:inline">
+
+              <form action="{{ route('products.destroy', $p->id) }}" method="POST" class="d-inline" id="delete-form-{{ $p->id }}">
                 @csrf
                 @method('DELETE')
-                <button onclick="return confirm('Yakin ingin menghapus?')" class="btn btn-sm btn-danger">Hapus</button>
+                <button type="button" class="btn btn-sm btn-danger btn-delete" data-id="{{ $p->id }}" data-name="{{ $p->nama }}">Hapus</button>
               </form>
             </td>
           </tr>
@@ -80,4 +81,36 @@
     </div>
   </div>
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.btn-delete').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      const id = this.dataset.id;
+      const name = this.dataset.name || 'data ini';
+      if (typeof Swal !== 'undefined') {
+        Swal.fire({
+          title: 'Yakin ingin menghapus?',
+          text: name,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Ya, hapus',
+          cancelButtonText: 'Batal'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            document.getElementById('delete-form-' + id).submit();
+          }
+        });
+      } else {
+        if (confirm('Yakin ingin menghapus: ' + name + ' ?')) {
+          document.getElementById('delete-form-' + id).submit();
+        }
+      }
+    });
+  });
+});
+</script>
+@endpush
+
 @endsection

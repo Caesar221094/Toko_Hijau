@@ -5,28 +5,26 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request)
     {
         $search = $request->get('search');
+        $query = Product::with('category');
 
-        $products = Product::with('category')
-            ->when($search, function ($q) use ($search) {
-                $q->where('nama', 'like', '%'.$search.'%')
-                  ->orWhere('deskripsi', 'like', '%'.$search.'%');
-            })
-            ->orderBy('id', 'desc')
-            ->paginate(10)
-            ->withQueryString();
+        if ($search) {
+            $query->where('nama', 'like', "%{$search}%")
+                  ->orWhere('deskripsi', 'like', "%{$search}%");
+        }
 
-        return view('product.index', compact('products', 'search'));
+        $products = $query->orderBy('id','desc')->paginate(10)->withQueryString();
+
+        return view('product.index', compact('products'));
     }
 
-    public function create(): View
+    public function create()
     {
         $categories = Category::orderBy('nama')->get();
         return view('product.create', compact('categories'));
@@ -39,22 +37,23 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'harga' => 'nullable|numeric',
             'deskripsi' => 'nullable|string',
-            'stok' => 'nullable|integer|min:0',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
+            'stok' => 'nullable|integer',
+            'foto' => 'nullable|image|max:2048',
         ]);
 
         $data = $request->only(['nama','category_id','harga','deskripsi','stok']);
 
         if ($request->hasFile('foto')) {
+            // simpan ke disk 'public' di folder 'produk'
             $data['foto'] = $request->file('foto')->store('produk', 'public');
         }
 
         Product::create($data);
 
-        return redirect()->route('products.index')->with('success','Produk berhasil dibuat.');
+        return redirect()->route('products.index')->with('success','Produk dibuat');
     }
 
-    public function edit(Product $product): View
+    public function edit(Product $product)
     {
         $categories = Category::orderBy('nama')->get();
         return view('product.edit', compact('product','categories'));
@@ -67,14 +66,14 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'harga' => 'nullable|numeric',
             'deskripsi' => 'nullable|string',
-            'stok' => 'nullable|integer|min:0',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
+            'stok' => 'nullable|integer',
+            'foto' => 'nullable|image|max:2048',
         ]);
 
         $data = $request->only(['nama','category_id','harga','deskripsi','stok']);
 
         if ($request->hasFile('foto')) {
-            // hapus file lama bila ada
+            // hapus file lama jika ada
             if ($product->foto && Storage::disk('public')->exists($product->foto)) {
                 Storage::disk('public')->delete($product->foto);
             }
@@ -83,16 +82,16 @@ class ProductController extends Controller
 
         $product->update($data);
 
-        return redirect()->route('products.index')->with('success','Produk berhasil diperbarui.');
+        return redirect()->route('products.index')->with('success','Produk diperbarui');
     }
 
     public function destroy(Product $product)
     {
-        // hapus foto jika ada
         if ($product->foto && Storage::disk('public')->exists($product->foto)) {
             Storage::disk('public')->delete($product->foto);
         }
         $product->delete();
-        return redirect()->route('products.index')->with('success','Produk berhasil dihapus.');
+
+        return redirect()->route('products.index')->with('success','Produk dihapus');
     }
 }
