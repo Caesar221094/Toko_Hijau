@@ -69,42 +69,34 @@
 
 @endsection
 
-@section('scripts')
-  {{-- pastikan layouts.app sudah memuat SweetAlert2 (kamu sudah add CDN). 
-      Script berikut akan menangkap klik tombol .btn-delete lalu memunculkan konfirmasi.
-  --}}
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      // tangkap semua tombol hapus
-      const deleteButtons = document.querySelectorAll('.btn-delete');
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // tangkap semua tombol hapus
+  const deleteButtons = document.querySelectorAll('.btn-delete');
 
-      deleteButtons.forEach(btn => {
-        btn.addEventListener('click', function (e) {
-          const name = this.dataset.name || 'data ini';
-          const form = this.closest('form');
+  deleteButtons.forEach(btn => {
+    btn.addEventListener('click', function (e) {
+      const name = this.dataset.name || 'data ini';
+      const form = this.closest('form');
 
-          // gunakan SweetAlert2 jika tersedia, kalau tidak fallback ke confirm()
-          if (typeof Swal !== 'undefined') {
-            Swal.fire({
-              title: 'Yakin ingin menghapus?',
-              text: name,
-              icon: 'warning',
-              showCancelButton: true,
-              confirmButtonText: 'Ya, hapus',
-              cancelButtonText: 'Batal',
-            }).then((result) => {
-              if (result.isConfirmed) {
-                form.submit();
-              }
-            });
-          } else {
-            if (confirm('Yakin ingin menghapus: ' + name + ' ?')) {
-              form.submit();
-            }
-          }
-        });
+      // gunakan SweetAlert2
+      Swal.fire({
+        title: 'Yakin ingin menghapus?',
+        text: name,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal',
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          form.submit();
+        }
       });
     });
-  </script>
-  
-@endsection
+  });
+});
+</script>
+@endpush

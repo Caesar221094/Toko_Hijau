@@ -10,16 +10,17 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            // foto disimpan path string, boleh null
-            $table->string('foto')->nullable();
             $table->string('nama');
             $table->text('deskripsi')->nullable();
-            // decimal untuk harga, nullable
-            $table->decimal('harga', 13, 2)->nullable();
-            $table->integer('stok')->default(0);
-            $table->unsignedBigInteger('category_id');
-            $table->foreign('category_id')
-                  ->references('id')->on('categories')
+            // foto disimpan path string, boleh null
+            $table->string('foto')->nullable();
+            // decimal untuk harga, 13 digit total dengan 2 desimal
+            $table->decimal('harga', 13, 2)->default(0);
+            // stok tidak boleh negatif, gunakan unsigned
+            $table->unsignedInteger('stok')->default(0);
+            // foreign key ke categories
+            $table->foreignId('category_id')
+                  ->constrained('categories')
                   ->onDelete('cascade');
             $table->timestamps();
         });

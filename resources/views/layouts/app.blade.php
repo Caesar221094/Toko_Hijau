@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>@yield('title','UTS PPWL')</title>
+<title>@yield('title','Toko Hijau Seller')</title>
 
 
 {{-- Sneat CSS --}}

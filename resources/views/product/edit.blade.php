@@ -44,10 +44,12 @@
         <label class="form-label">Foto (opsional)</label>
         @if($product->foto && \Illuminate\Support\Facades\Storage::disk('public')->exists($product->foto))
           <div class="mb-2">
-            <img src="{{ Storage::disk('public')->url($product->foto) }}" alt="" width="120">
+            <img src="{{ asset('storage/' . $product->foto) }}" alt="{{ $product->nama }}" style="max-width:200px; border-radius:6px; border:1px solid #e6e6e6;">
+            <p class="text-muted small mt-1">Foto saat ini: {{ basename($product->foto) }}</p>
           </div>
         @endif
-        <input type="file" name="foto" class="form-control" />
+        <input type="file" name="foto" class="form-control" accept="image/jpeg,image/png,image/jpg,image/gif" />
+        <small class="text-muted">Upload foto baru untuk mengganti foto lama (Max: 2MB)</small>
         @error('foto') <div class="text-danger">{{ $message }}</div> @enderror
       </div>
 

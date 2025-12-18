@@ -10,4 +10,12 @@ class Category extends Model
     use HasFactory;
 
     protected $fillable = ['nama'];
+
+    /**
+     * Relasi: satu kategori memiliki banyak produk
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }

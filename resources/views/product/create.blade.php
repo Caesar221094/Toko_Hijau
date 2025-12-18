@@ -42,7 +42,8 @@
 
       <div class="mb-3">
         <label class="form-label">Foto (optional)</label>
-        <input type="file" name="foto" class="form-control">
+        <input type="file" name="foto" class="form-control" accept="image/jpeg,image/png,image/jpg,image/gif">
+        <small class="text-muted">Format: JPG, PNG, GIF (Max: 2MB)</small>
         @error('foto') <div class="text-danger">{{ $message }}</div> @enderror
       </div>
 

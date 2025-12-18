@@ -41,9 +41,11 @@
 
             <td style="vertical-align:middle;">
               @if(!empty($p->foto) && Storage::disk('public')->exists($p->foto))
-                <img src="{{ Storage::disk('public')->url($p->foto) }}" alt="{{ $p->nama }}" style="height:56px; width:56px; object-fit:cover; border-radius:6px; border:1px solid #e6e6e6;">
+                <img src="{{ asset('storage/' . $p->foto) }}" alt="{{ $p->nama }}" style="height:56px; width:56px; object-fit:cover; border-radius:6px; border:1px solid #e6e6e6;">
               @else
-                <img src="{{ asset('assets/img/placeholder-56.png') }}" alt="no-photo" style="height:56px; width:56px; object-fit:cover; border-radius:6px; border:1px solid #e6e6e6;">
+                <div style="height:56px; width:56px; display:flex; align-items:center; justify-content:center; background:#f0f0f0; border-radius:6px; border:1px solid #e6e6e6; color:#999; font-size:10px;">
+                  No Image
+                </div>
               @endif
             </td>
 
@@ -89,24 +91,21 @@ document.addEventListener('DOMContentLoaded', function(){
     btn.addEventListener('click', function(){
       const id = this.dataset.id;
       const name = this.dataset.name || 'data ini';
-      if (typeof Swal !== 'undefined') {
-        Swal.fire({
-          title: 'Yakin ingin menghapus?',
-          text: name,
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonText: 'Ya, hapus',
-          cancelButtonText: 'Batal'
-        }).then((result) => {
-          if (result.isConfirmed) {
-            document.getElementById('delete-form-' + id).submit();
-          }
-        });
-      } else {
-        if (confirm('Yakin ingin menghapus: ' + name + ' ?')) {
+      
+      Swal.fire({
+        title: 'Yakin ingin menghapus?',
+        text: name,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal',
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6'
+      }).then((result) => {
+        if (result.isConfirmed) {
           document.getElementById('delete-form-' + id).submit();
         }
-      }
+      });
     });
   });
 });

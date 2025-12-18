@@ -35,10 +35,10 @@ class ProductController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'harga' => 'nullable|numeric',
+            'harga' => 'required|numeric|min:0',
             'deskripsi' => 'nullable|string',
-            'stok' => 'nullable|integer',
-            'foto' => 'nullable|image|max:2048',
+            'stok' => 'required|integer|min:0',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $data = $request->only(['nama','category_id','harga','deskripsi','stok']);
@@ -64,10 +64,10 @@ class ProductController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'harga' => 'nullable|numeric',
+            'harga' => 'required|numeric|min:0',
             'deskripsi' => 'nullable|string',
-            'stok' => 'nullable|integer',
-            'foto' => 'nullable|image|max:2048',
+            'stok' => 'required|integer|min:0',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $data = $request->only(['nama','category_id','harga','deskripsi','stok']);

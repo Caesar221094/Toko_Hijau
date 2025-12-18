@@ -14,6 +14,7 @@ new #[Layout('layouts.guest')] class extends Component
     public string $email = '';
     public string $password = '';
     public string $password_confirmation = '';
+    public string $role = 'customer';
 
     /**
      * Handle an incoming registration request.
@@ -24,6 +25,7 @@ new #[Layout('layouts.guest')] class extends Component
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+            'role' => ['required', 'in:customer,admin'],
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
@@ -32,7 +34,12 @@ new #[Layout('layouts.guest')] class extends Component
 
         Auth::login($user);
 
-        $this->redirect(route('dashboard', absolute: false), navigate: true);
+        // Redirect berdasarkan role
+        if ($user->role === 'admin') {
+            $this->redirect(route('dashboard', absolute: false), navigate: true);
+        } else {
+            $this->redirect(route('shop.index', absolute: false), navigate: true);
+        }
     }
 }; ?>
 
@@ -50,6 +57,16 @@ new #[Layout('layouts.guest')] class extends Component
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" required autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        </div>
+
+        <!-- Role -->
+        <div class="mt-4">
+            <x-input-label for="role" value="Daftar Sebagai" />
+            <select wire:model="role" id="role" name="role" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
+                <option value="customer">Customer / Pembeli</option>
+                <option value="admin">Admin / Penjual</option>
+            </select>
+            <x-input-error :messages="$errors->get('role')" class="mt-2" />
         </div>
 
         <!-- Password -->
