@@ -6,8 +6,8 @@
 <div class="container-xxl flex-grow-1 container-p-y">
     <div class="row">
         <div class="col-12 mb-4">
-            <h4 class="fw-bold text-capitalize">Dashboard Toko Hijau Seller</h4>
-            <p class="text-muted">Ringkasan Pesanan Dan Omset Toko</p>
+            <h4 class="fw-bold text-capitalize">Dashboard Admin Toko Hijau</h4>
+            <p class="text-muted">Ringkasan pesanan dan omset toko untuk admin</p>
         </div>
     </div>
 
