@@ -6,7 +6,7 @@
 @section('content')
 <div class="card">
   <div class="card-header d-flex justify-content-between align-items-center">
-    <h5 class="mb-0">Daftar Kategori</h5>
+    <h5 class="mb-0">Daftar Kategori Produk</h5>
     <a href="{{ route('categories.create') }}" class="btn btn-primary">Tambah Kategori</a>
   </div>
 
