@@ -3,7 +3,7 @@
 @section('title', 'Checkout')
 
 @section('content')
-<h2 class="mb-4"><i class="bi bi-credit-card"></i> Checkout</h2>
+<h2 class="mb-4"><i class="bi bi-credit-card"></i> Checkout & Pembayaran Produk</h2>
 
 @if(session('error'))
     <div class="alert alert-danger alert-dismissible fade show">
