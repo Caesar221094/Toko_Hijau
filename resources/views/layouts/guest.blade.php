@@ -42,7 +42,7 @@
 
               {{-- Logo --}}
               <div class="app-brand justify-content-center mb-4">
-                <span class="app-brand-text demo text-body fw-bolder">Sneat Login</span>
+                <span class="app-brand-text demo text-body fw-bolder">Toko Hijau Auth</span>
               </div>
 
               {{-- Tempat form Login/Register muncul --}}
